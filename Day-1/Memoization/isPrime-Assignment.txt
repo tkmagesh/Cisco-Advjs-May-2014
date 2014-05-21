@@ -1,0 +1,1 @@
+convert the isPrime function in such a way that the "cache" is held private so that it is not accessible from outside
