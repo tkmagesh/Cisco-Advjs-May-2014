@@ -23,6 +23,8 @@
 		margin: 5px;
 	}
 	</style>
+	<script src="require.js"></script>
+	<!-- <script src="Task.js"></script> -->
 	<script src="handlebars.js"></script>
 	<script src="jquery-2.1.1.js"></script>
 	<script type="text/template" id="taskListTemplate">
@@ -51,7 +53,6 @@
 				var templateHtml = $("#taskListTemplate").html();
 				var templateFn = Handlebars.compile(templateHtml);
 				var resultHTML = templateFn(data);
-				console.log(resultHTML);
 				$(".list").html(resultHTML);
 			});
 		}
