@@ -23,19 +23,42 @@
 		margin: 5px;
 	}
 	</style>
+	<script src="handlebars.js"></script>
 	<script src="jquery-2.1.1.js"></script>
+	<script type="text/template" id="taskListTemplate">
+		<ul id="ulTaskList">
+			{{#each list}}
+			<li task-id="{{id}}"
+				{{#if isCompleted}}
+					class="completed"
+				{{/if}}
+			>{{name}}</li>
+			{{/each}}
+		</ul>
+	</script>
 	<script>
 	(function(){
 		$(function(){
 			$("#btnAdd").click(onBtnAddClick);
 			$("#btnRemoveCompleted").click(onBtnRemoveCompletedClick);
-			$("#ulTaskList > li").click(taskItemClick);
+			//$("#ulTaskList > li").click(taskItemClick);
+			$("div.list").on("click","li",taskItemClick);
 			$("divMessage").hide();
+			loadData();
 		})
+		function loadData(){
+			$.getJSON("tasks.json",function(data){
+				var templateHtml = $("#taskListTemplate").html();
+				var templateFn = Handlebars.compile(templateHtml);
+				var resultHTML = templateFn(data);
+				console.log(resultHTML);
+				$(".list").html(resultHTML);
+			});
+		}
 		
 		function onBtnAddClick(){
 			$("<li></li>")
-				.click(taskItemClick)
+				//.click(taskItemClick)
 				.html($("#txtTask").val())
 				.hide()
 				.appendTo("#ulTaskList")
@@ -73,11 +96,9 @@
 	<input type="text" name="" id="txtTask">
 	<input type="button" value="Add Task" id="btnAdd">
 	<input type="button" value="Remove Completed" id="btnRemoveCompleted">
-	<ul id="ulTaskList">
-		<li class="completed">Task - 1</li>
-		<li>Task - 2</li>
-		<li>Task - 3</li>
-	</ul>
+	<div class="list">
+		
+	</div>
 	<div class="toastRegion">
 		
 	</div>
