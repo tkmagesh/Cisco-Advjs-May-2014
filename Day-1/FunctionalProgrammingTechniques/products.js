@@ -72,3 +72,79 @@ countBy
 groupBy
 join
 */
+
+function filter(list, predicate){
+	var result = [];
+	for(var i=0;i<list.length;i++){
+		var item = list[i];
+		if (predicate(item) )
+			result.push(item);
+	}
+	return result;
+}
+var costlyProductPredicate = function(p){ return p.cost > 50};
+var costlyProducts = filter(products,costlyProductPredicate);
+
+var inversePredicate = function(predicate){
+	return function(){
+		return !predicate.apply(this,[].slice.call(arguments,0));
+	}
+}
+
+var cheapProductPredicate = function(product){
+	return !costlyProductPredicate(product);
+};
+
+
+var cheapProducts = filter(products,cheapProductPredicate);
+
+var overStockedPredicate = function(product){
+	return product.units > 20;
+};
+
+var wellStockedPredicate = function(product){
+	return !overStockedPredicate(product);
+};
+
+var wellStockedPredicate = inversePredicate(overStockedPredicate);
+
+function min(list,selector){
+	var selectorFn = typeof selector === "function" ? selector : function(item){ return item[selector]};
+	var result = selectorFn(list[0]);
+	for(var i=0;i<list.length;i++){
+		var value = selectorFn(list[i]);
+		if (value < result)
+			result = value;
+	}
+	return result;
+}
+
+function max(list,selector){
+	var selectorFn = typeof selector === "function" ? selector : function(item){ return item[selector]};
+	var result = selectorFn(list[0]);
+	for(var i=0;i<list.length;i++){
+		var value = selectorFn(list[i]);
+		if (value > result)
+			result = value;
+	}
+	return result;
+}
+
+function groupBy(list,selector){
+	var selectorFn = typeof selector === "function" ? selector : function(item){ return item[selector]};
+	var result = {};
+	for(var i=0;i<list.length;i++){
+		var key = selectorFn(list[i]);
+		result[key] = result[key] || [];
+		result[key].push(list[i]);
+	}
+	return result;
+}
+
+var productCategorizerByPrice = function(p){
+  if (p.cost < 20) return "cheap";
+  if (p.cost > 50) return "costly";
+  return "affordable"
+}
+
+var productsByCost = groupBy(products,productCategorizerByPrice);
