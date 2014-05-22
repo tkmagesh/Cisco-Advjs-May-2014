@@ -148,3 +148,23 @@ var productCategorizerByPrice = function(p){
 }
 
 var productsByCost = groupBy(products,productCategorizerByPrice);
+
+function join(leftList, rightList, leftKeySelector, rightKeySelector, transformerFn){
+	var result = [];
+	for(var i=0;i<leftList.length;i++){
+		var leftKey = leftList[i][leftKeySelector];
+		for(var j=0;j<rightList.length;j++){
+			var rightKey = rightList[j][rightKeySelector];
+			if (leftKey === rightKey){
+				var resultItem = transformerFn(leftList[i],rightList[j]);
+				result.push(resultItem);
+			}
+		}
+	}
+	return result;
+}
+
+var productsWithCategoryName = join(products,categories,"category","id", function(p,c){
+   return {id : p.id, name : p.name, cost : p.cost, categoryName : c.name};
+});
+

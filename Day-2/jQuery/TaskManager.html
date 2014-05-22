@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task Manager</title>
+	<style>
+	.completed{
+		color : red;
+		text-decoration: line-through;
+		font-style: italic;
+	}
+	</style>
+	<script>
+	(function(){
+		var txtTask, ulTaskList, divMessage;
+		window.addEventListener("DOMContentLoaded",init);
+		function init(){
+			document.getElementById("btnAdd").addEventListener("click",onBtnAddClick);
+			document.getElementById("btnRemoveCompleted").addEventListener("click",onBtnRemoveCompletedClick);
+			txtTask = document.getElementById("txtTask");
+			ulTaskList = document.getElementById("ulTaskList");
+			divMessage = document.getElementById("divMessage");
+
+			attachClickToTaskItems();
+		}
+		function attachClickToTaskItems(){
+			var taskItems = ulTaskList.children;
+			for(var i=0;i<taskItems.length;i++)
+				taskItems[i].addEventListener("click",taskItemClick);
+		}
+
+		function onBtnAddClick(){
+			var taskName = txtTask.value;
+			var newTaskItem = document.createElement("li");
+			newTaskItem.addEventListener("click",taskItemClick);
+			newTaskItem.innerHTML = taskName;
+			ulTaskList.appendChild(newTaskItem);
+			displayMessage("A new task is added");
+		}
+		function onBtnRemoveCompletedClick(){
+			var taskItems = ulTaskList.children;
+			for(var i = taskItems.length-1; i>=0;i--){
+				var taskItem = taskItems[i];
+				if (taskItem.classList.contains("completed"))
+					ulTaskList.removeChild(taskItem);
+			}
+			displayMessage("Zero or more completed tasks are removed");
+		}
+		function taskItemClick(){
+			if (this.classList.contains("completed")){
+				this.classList.remove("completed");
+			} else {
+				this.classList.add("completed");
+			}
+		}
+		function displayMessage(msg){
+			divMessage.innerHTML = msg;
+		}
+	})();
+	</script>
+</head>
+<body>
+	<h1>Task Manager</h1>
+	<hr>
+	<span>Task :</span>
+	<input type="text" name="" id="txtTask">
+	<input type="button" value="Add Task" id="btnAdd">
+	<input type="button" value="Remove Completed" id="btnRemoveCompleted">
+	<ul id="ulTaskList">
+		<li class="completed">Task - 1</li>
+		<li>Task - 2</li>
+		<li>Task - 3</li>
+	</ul>
+	<div id="divMessage"></div>
+</body>
+</html>
