@@ -9,6 +9,19 @@
 		text-decoration: line-through;
 		font-style: italic;
 	}
+	.toastRegion{
+		position : absolute;
+		bottom : 0px;
+		right : 0px;
+	}
+	.message{
+		border : 1px solid black;
+		border-radius: 5px;
+		background-color: black;
+		color : yellow;
+		padding: 5px;
+		margin: 5px;
+	}
 	</style>
 	<script src="jquery-2.1.1.js"></script>
 	<script>
@@ -17,10 +30,17 @@
 			$("#btnAdd").click(onBtnAddClick);
 			$("#btnRemoveCompleted").click(onBtnRemoveCompletedClick);
 			$("#ulTaskList > li").click(taskItemClick);
+			$("divMessage").hide();
 		})
 		
 		function onBtnAddClick(){
-			$("<li></li>").click(taskItemClick).html($("#txtTask").val()).appendTo("#ulTaskList");
+			$("<li></li>")
+				.click(taskItemClick)
+				.html($("#txtTask").val())
+				.hide()
+				.appendTo("#ulTaskList")
+				.slideDown('slow');
+				
 			displayMessage("A new task is added");
 		}
 		function onBtnRemoveCompletedClick(){
@@ -31,7 +51,17 @@
 			$(this).toggleClass("completed");
 		}
 		function displayMessage(msg){
-			$("divMessage").html(msg);
+			$("<div></div>")
+				.addClass("message")
+				.html(msg)
+				.hide()
+				.appendTo(".toastRegion")
+				.slideDown('slow')
+				.delay(3000)
+				.slideUp('slow',function(){
+					$(this).remove();
+				});
+			//$("#divMessage").html(msg).fadeIn(400).delay(3000).fadeOut(400);
 		}
 	})();
 	</script>
@@ -48,6 +78,9 @@
 		<li>Task - 2</li>
 		<li>Task - 3</li>
 	</ul>
-	<div id="divMessage"></div>
+	<div class="toastRegion">
+		
+	</div>
+	
 </body>
 </html>
